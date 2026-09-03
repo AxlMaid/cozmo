@@ -34,10 +34,8 @@ ipython==9.17.1
 PyOpenGL==3.1.10
 
 # The cozmo wheel above (as published by Anki) has cozmo/opengl.py import
-# pkg_resources, which setuptools removed in 81.0.0. This checkout's
-# installed copy of cozmo/opengl.py has been hand-patched to use
-# importlib.resources instead, so pkg_resources is no longer needed here -
-# but a fresh `pip install -r requirements.txt` elsewhere pulls the
-# original, unpatched wheel, which still needs it. Pin below 81 unless
-# you re-apply that patch after installing.
+# pkg_resources, which setuptools removed in 81.0.0. Run ./install_sdk_patches.sh
+# after this file to overlay this repo's patched copy (which uses
+# importlib.resources instead) and this pin becomes unnecessary. Until you've
+# run that script, keep setuptools below 81 or cozmo.opengl won't import.
 setuptools<81

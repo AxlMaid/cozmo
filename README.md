@@ -74,11 +74,18 @@ were going on under the hood, handled differently:
 
 ```
 pip3 install --user -r requirements.txt
+./install_sdk_patches.sh
 ```
 
 See [requirements.txt](requirements.txt) for why `cozmo`/`cozmoclad` are pulled from a direct
 URL rather than PyPI (PyPI's public releases are older than what's tested here), and why
 `setuptools<81` is currently required for a fresh install.
+
+`pip install` gives you Anki's original, unpatched SDK — the five bugs described above live in
+the actual pip-installed package, not in this repo, so they'd otherwise come back on every fresh
+install. [install_sdk_patches.sh](install_sdk_patches.sh) copies this repo's patched
+[cozmo/](cozmo) directory over your installed copy to fix that. Re-run it any time you reinstall
+`cozmo` from `requirements.txt`.
 
 ## Layout
 
@@ -90,5 +97,8 @@ URL rather than PyPI (PyPI's public releases are older than what's tested here),
   stock prices) via IFTTT.
 - [multi_robot/](multi_robot) — controlling more than one Cozmo/cube from a single script.
 - [tools/cubes/](tools/cubes) — standalone cube connect/disconnect/battery-check utilities.
+- [cozmo/](cozmo) — a vendored, patched copy of the installed SDK (see
+  [install_sdk_patches.sh](install_sdk_patches.sh)). Not imported directly by anything here;
+  it exists so the SDK-level fixes travel with the repo instead of living only on one machine.
 
 More to come as we build our own programs on top of this.
