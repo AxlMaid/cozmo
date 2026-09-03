@@ -84,8 +84,8 @@ URL rather than PyPI (PyPI's public releases are older than what's tested here),
 `pip install` gives you Anki's original, unpatched SDK — the five bugs described above live in
 the actual pip-installed package, not in this repo, so they'd otherwise come back on every fresh
 install. [install_sdk_patches.sh](install_sdk_patches.sh) copies this repo's patched
-[cozmo/](cozmo) directory over your installed copy to fix that. Re-run it any time you reinstall
-`cozmo` from `requirements.txt`.
+[cozmo_sdk/](cozmo_sdk) directory over your installed copy to fix that. Re-run it any time you
+reinstall `cozmo` from `requirements.txt`.
 
 ## Layout
 
@@ -97,8 +97,11 @@ install. [install_sdk_patches.sh](install_sdk_patches.sh) copies this repo's pat
   stock prices) via IFTTT.
 - [multi_robot/](multi_robot) — controlling more than one Cozmo/cube from a single script.
 - [tools/cubes/](tools/cubes) — standalone cube connect/disconnect/battery-check utilities.
-- [cozmo/](cozmo) — a vendored, patched copy of the installed SDK (see
-  [install_sdk_patches.sh](install_sdk_patches.sh)). Not imported directly by anything here;
-  it exists so the SDK-level fixes travel with the repo instead of living only on one machine.
+- [cozmo_sdk/](cozmo_sdk) — a vendored, patched copy of the installed `cozmo` package (see
+  [install_sdk_patches.sh](install_sdk_patches.sh)). Not imported directly by anything here; it
+  exists so the SDK-level fixes travel with the repo instead of living only on one machine.
+  Named `cozmo_sdk` rather than `cozmo` on purpose — Python checks the current directory before
+  site-packages, so a folder literally named `cozmo` sitting at the repo root would silently
+  shadow the real installed package for anything run from here.
 
 More to come as we build our own programs on top of this.
