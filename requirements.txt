@@ -1,0 +1,43 @@
+# Dependencies for the Anki Cozmo Python SDK examples in this repo.
+# Install with: pip3 install --user -r requirements.txt
+#
+# This SDK (last updated ~2018) is being run here against a much newer
+# Python/toolchain, so versions below are pinned to what has been verified
+# to actually work in that combination - not necessarily the newest release
+# of each package.
+
+# The Cozmo SDK itself.
+# PyPI's public releases stop at cozmo 1.4.10 / cozmoclad 3.4.0 - older than
+# what's installed and verified here. Anki's docs site (cozmosdk.anki.bot/docs)
+# is dead, but the wheel host under the same domain is still serving files, so
+# we pull the newer versions directly from there instead of from PyPI.
+cozmo @ https://cozmosdk.anki.bot/1.4.12/cozmo-1.4.12-py3-none-any.whl
+cozmoclad @ https://cozmosdk.anki.bot/1.4.12/cozmoclad-3.6.6-py3-none-any.whl
+
+# Used by tutorials/apps that draw on Cozmo's face, process camera images,
+# or do array math (02_cozmo_face/*, 03_vision/*, color_finder.py, etc.)
+Pillow==12.3.0
+numpy==2.5.2
+
+# Used by the Flask-based web UIs (remote_control_cozmo.py,
+# ifttt_sports_flask.py) and the aiohttp-based IFTTT webhook servers
+# (ifttt_gmail.py, ifttt_sports.py, ifttt_stocks.py)
+flask==3.1.3
+aiohttp==3.14.3
+requests==2.34.2
+
+# Used by apps/cli.py for an interactive Cozmo console
+ipython==9.17.1
+
+# Used by cozmo.opengl (apps/3d_viewer.py, use_3d_viewer=True) for the 3D
+# pose viewer
+PyOpenGL==3.1.10
+
+# The cozmo wheel above (as published by Anki) has cozmo/opengl.py import
+# pkg_resources, which setuptools removed in 81.0.0. This checkout's
+# installed copy of cozmo/opengl.py has been hand-patched to use
+# importlib.resources instead, so pkg_resources is no longer needed here -
+# but a fresh `pip install -r requirements.txt` elsewhere pulls the
+# original, unpatched wheel, which still needs it. Pin below 81 unless
+# you re-apply that patch after installing.
+setuptools<81

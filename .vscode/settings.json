@@ -1,0 +1,13 @@
+{
+    "python.analysis.extraPaths": [
+        "./lib"
+    ],
+    "files.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true
+    },
+    "search.exclude": {
+        "**/__pycache__": true,
+        "**/*.pyc": true
+    }
+}
