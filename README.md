@@ -73,9 +73,17 @@ were going on under the hood, handled differently:
 ## Setup
 
 ```
-pip3 install --user -r requirements.txt
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
 ./install_sdk_patches.sh
 ```
+
+A virtual environment isn't required (`pip3 install --user -r requirements.txt` works fine
+too), but it keeps this project's dependencies isolated from anything else on your machine, and
+it's what's actually been tested. Either way, run `install_sdk_patches.sh` with that same
+environment active — it patches whatever `python3` resolves to at the time. If you create
+another venv later, or reinstall `requirements.txt` into an existing one, re-run it there too.
 
 See [requirements.txt](requirements.txt) for why `cozmo`/`cozmoclad` are pulled from a direct
 URL rather than PyPI (PyPI's public releases are older than what's tested here), and why
@@ -84,8 +92,7 @@ URL rather than PyPI (PyPI's public releases are older than what's tested here),
 `pip install` gives you Anki's original, unpatched SDK — the five bugs described above live in
 the actual pip-installed package, not in this repo, so they'd otherwise come back on every fresh
 install. [install_sdk_patches.sh](install_sdk_patches.sh) copies this repo's patched
-[cozmo_sdk/](cozmo_sdk) directory over your installed copy to fix that. Re-run it any time you
-reinstall `cozmo` from `requirements.txt`.
+[cozmo_sdk/](cozmo_sdk) directory over your installed copy to fix that.
 
 ## Layout
 
