@@ -402,6 +402,8 @@ _DEFAULT_CONNECTOR = FirstAvailableConnector()
 
 def _sync_exception_handler(abort_future, loop, context):
     loop.default_exception_handler(context)
+    if abort_future.done():
+        return
     exception = context.get('exception')
     if exception is not None:
         abort_future.set_exception(context['exception'])
