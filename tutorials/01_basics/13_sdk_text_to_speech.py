@@ -62,14 +62,14 @@ def cozmo_program(robot: cozmo.robot.Robot):
     # "talking" animation, which is essentially a no-op placeholder.
     print("1) Plain say_text() - uses AnimationTrigger.Count internally:")
     robot.say_text("Bonjour, j'utilise la fonction de synthèse vocale normale.",
-                    use_cozmo_voice=False).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
+                    use_cozmo_voice=False, duration_scalar=0.4).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
 
     # 2) Excited say_text(): internally reuses OnSawNewNamedFace, a trigger
     # meant for greeting a recognized face, not for talking.
     print("2) Excited say_text() - reuses the OnSawNewNamedFace trigger:")
     robot.say_text("Maintenant, j'utilise plutôt la version excitée !",
                     play_excited_animation=True,
-                    use_cozmo_voice=False).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
+                    use_cozmo_voice=False, duration_scalar=0.4).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
 
     # 3) Play SdkTextToSpeech directly. This is the trigger that was clearly
     # *meant* to power say_text(), but never worked and was never wired up.
