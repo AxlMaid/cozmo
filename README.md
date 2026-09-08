@@ -94,6 +94,20 @@ the actual pip-installed package, not in this repo, so they'd otherwise come bac
 install. [install_sdk_patches.sh](install_sdk_patches.sh) copies this repo's patched
 [cozmo_sdk/](cozmo_sdk) directory over your installed copy to fix that.
 
+### Tkinter (for `use_viewer=True`)
+
+Any script that pops up the live camera-feed window (`use_viewer=True`,
+`connect_with_tkviewer` — most of `tutorials/03_vision/`, several of `tutorials/04_cubes_and_objects/`,
+and `apps/desk_security_guard.py`/`apps/cli.py`/`apps/3d_viewer.py`) needs Tkinter, which
+Homebrew's Python does *not* include by default. On macOS with Homebrew:
+
+```
+brew install python-tk@3.14
+```
+
+(swap `3.14` for whatever Python version `python3 --version` reports). This is a system
+package, not a pip one, so it isn't in `requirements.txt` and applies outside any venv.
+
 ## Layout
 
 - [tutorials/](tutorials) — a graduated course from `hello_world` through vision, cube/object
