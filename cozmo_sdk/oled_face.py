@@ -128,6 +128,6 @@ def convert_image_to_screen_data(image, invert_image=False, pixel_threshold=127)
     bw = grayscale_image.point(pixel_func, '1')
 
     # convert to a flattened 1D bytes object of pixel values (1s or 0s in this case)
-    pixel_data = bytes(bw.getdata())
+    pixel_data = bytes(bw.get_flattened_data())
 
     return convert_pixels_to_screen_data(pixel_data, image.width, image.height)
