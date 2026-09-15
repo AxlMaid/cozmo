@@ -6,13 +6,17 @@ This is an original melody and original lyrics in the same playful
 "let's go catch them all" spirit as a certain monster-catching show's
 theme song - not a reproduction of that (or any other existing) song.
 
-Cozmo plays the melody for ~5 seconds, then "sings" original lyrics via
-text-to-speech for ~5 seconds. Throughout both phases, a random animation
-from the full cozmo.anim.Triggers list plays continuously alongside.
+Sequence: random animation, then the melody, then another random
+animation, then the lyrics (spoken), then one last random animation.
+
+Note: singing/speaking and a triggered animation's own sound effect can't
+play at once - Cozmo only has one audio channel, and confirmed on real
+hardware, starting an animation trigger while the song/speech action is
+still running actively aborts it rather than being silenced or queued.
+That's why these run one at a time instead of "in parallel".
 '''
 
 import random
-import time
 
 import cozmo
 from cozmo.song import SongNote, NoteTypes, NoteDurations
@@ -35,34 +39,44 @@ LYRICS = ("Little robot on the go, gotta find them high and low! "
           "Every friend, near and far, Cozmo knows just who you are!")
 
 
-def play_random_animations_for(robot: cozmo.robot.Robot, duration_s):
-    '''Play random animation triggers back-to-back until duration_s has elapsed.'''
-    deadline = time.time() + duration_s
-    triggers = cozmo.anim.Triggers.trigger_list  # pyright: ignore[reportAttributeAccessIssue]
+def play_random_animation(robot: cozmo.robot.Robot):
+    '''Play a single random animation trigger and wait for it to complete.'''
+    trigger = random.choice(cozmo.anim.Triggers.trigger_list)  # pyright: ignore[reportAttributeAccessIssue]
+    robot.play_anim_trigger(trigger, ignore_body_track=True).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
 
-    while True:
-        remaining = deadline - time.time()
-        if remaining <= 0:
-            break
 
-        trigger = random.choice(triggers)
-        action = robot.play_anim_trigger(trigger, ignore_body_track=True, in_parallel=True)
-        try:
-            action.wait_for_completed(timeout=remaining)
-        except (TimeoutError, cozmo.exceptions.CozmoSDKException):
-            action.abort()
+def say_long_text(robot: cozmo.robot.Robot, text, max_len=255):
+    '''Speak text via say_text(), splitting it into whole-word chunks first if
+    needed - Cozmo's SayText protocol message hard-caps text at 255 characters
+    and raises ValueError rather than truncating it for you.'''
+    words = text.split()
+    chunk = ""
+    for word in words:
+        candidate = (chunk + " " + word).strip()
+        if len(candidate) > max_len:
+            robot.say_text(chunk).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
+            chunk = word
+        else:
+            chunk = candidate
+    if chunk:
+        robot.say_text(chunk).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
 
 
 def cozmo_program(robot: cozmo.robot.Robot):
-    print("Phase 1: melody (~5s) + random animations")
-    song_action = robot.play_song(MELODY, loop_count=3, in_parallel=True)
-    play_random_animations_for(robot, 5.0)
-    song_action.abort()
+    print("Random animation")
+    play_random_animation(robot)
 
-    print("Phase 2: original lyrics (~5s) + random animations")
-    say_action = robot.say_text(LYRICS, in_parallel=True)
-    play_random_animations_for(robot, 5.0)
-    say_action.abort()
+    print("Melody")
+    robot.play_song(MELODY, loop_count=3).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
+
+    print("Random animation")
+    play_random_animation(robot)
+
+    print("Lyrics")
+    say_long_text(robot, LYRICS)
+
+    print("Random animation")
+    play_random_animation(robot)
 
 
 cozmo.run_program(cozmo_program)
