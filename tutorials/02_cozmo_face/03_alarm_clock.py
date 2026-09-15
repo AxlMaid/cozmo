@@ -261,7 +261,7 @@ def alarm_clock(robot: cozmo.robot.Robot):
             # Speak The Time (off the charger as it's an animation)
             with robot.perform_off_charger():  # pyright: ignore[reportGeneralTypeIssues]
                 spoken_time = "%dh%02d" % (current_time.hour, current_time.minute)
-                robot.say_text("Réveille-toi, mon cher ami ! Il est " + spoken_time,
+                robot.say_text("Réveille-toi, cher ami ! Il est " + spoken_time,
                                use_cozmo_voice=False,
                                duration_scalar=0.4).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
         else:
