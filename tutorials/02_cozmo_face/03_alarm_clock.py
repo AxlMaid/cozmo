@@ -165,33 +165,6 @@ def make_clock_image(current_time):
     return clock_image
 
 
-_FRENCH_ONES = ["zéro", "un", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf",
-                "dix", "onze", "douze", "treize", "quatorze", "quinze", "seize", "dix-sept",
-                "dix-huit", "dix-neuf"]
-_FRENCH_TENS = {20: "vingt", 30: "trente", 40: "quarante", 50: "cinquante"}
-
-
-def number_to_french_words(n):
-    '''Convert an integer (0..59) to its French word form, e.g. 3 -> "trois".'''
-    if n < 20:
-        return _FRENCH_ONES[n]
-    tens_word = _FRENCH_TENS[(n // 10) * 10]
-    ones = n % 10
-    if ones == 0:
-        return tens_word
-    if ones == 1:
-        return tens_word + " et un"
-    return tens_word + "-" + _FRENCH_ONES[ones]
-
-
-def time_to_french_words(hour, minute):
-    '''Convert an hour (0..23) and minute (0..59) to spoken French, e.g. 20:03 -> "vingt heures trois".'''
-    hour_word = "une heure" if hour == 1 else number_to_french_words(hour) + " heures"
-    if minute == 0:
-        return hour_word
-    return hour_word + " " + number_to_french_words(minute)
-
-
 def convert_to_time_int(in_value, time_unit):
     '''Convert in_value to an int and ensure it is in the valid range for that time unit
 
@@ -287,7 +260,7 @@ def alarm_clock(robot: cozmo.robot.Robot):
             robot.abort_all_actions()
             # Speak The Time (off the charger as it's an animation)
             with robot.perform_off_charger():  # pyright: ignore[reportGeneralTypeIssues]
-                spoken_time = time_to_french_words(current_time.hour, current_time.minute)
+                spoken_time = "%dh%02d" % (current_time.hour, current_time.minute)
                 robot.say_text("Réveille-toi, mon cher ami ! Il est " + spoken_time,
                                use_cozmo_voice=False,
                                duration_scalar=0.4).wait_for_completed()  # pyright: ignore[reportUnusedCoroutine]
