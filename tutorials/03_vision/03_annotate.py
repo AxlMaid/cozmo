@@ -50,7 +50,7 @@ import cozmo
 def clock(image, scale, annotator=None, world=None, **kw):
     d = ImageDraw.Draw(image)
     bounds = (0, 0, image.width, image.height)
-    text = cozmo.annotate.ImageText(time.strftime("%H:%m:%S"),
+    text = cozmo.annotate.ImageText(time.strftime("%H:%M:%S"),
             position=cozmo.annotate.TOP_LEFT)
     text.render(d, bounds)
 
@@ -69,22 +69,22 @@ def cozmo_program(robot: cozmo.robot.Robot):
     robot.world.image_annotator.add_annotator('clock', clock)
     robot.world.image_annotator.add_annotator('battery', Battery)
 
-    time.sleep(2)
+    time.sleep(5)
 
-    print("Turning off all annotations for 2 seconds")
+    print("Turning off all annotations for 5 seconds")
     robot.world.image_annotator.annotation_enabled = False
-    time.sleep(2)
+    time.sleep(5)
 
     print('Re-enabling all annotations')
     robot.world.image_annotator.annotation_enabled = True
 
     # Disable the face annotator after 10 seconds
-    time.sleep(10)
+    time.sleep(5)
     print("Disabling face annotations (light cubes still annotated)")
     robot.world.image_annotator.disable_annotator('faces')
 
     # Shutdown the program after 100 seconds
-    time.sleep(100)
+    time.sleep(30)
 
 
 cozmo.run_program(cozmo_program, use_viewer=True, force_viewer_on_top=True)
