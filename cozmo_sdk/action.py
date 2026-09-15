@@ -647,6 +647,10 @@ class _ActionDispatcher(event.Dispatcher):
             # robot_completed_action message that is still being dispatched
             # via asyncio.ensure_future
             logger.debug('Not sending abort for action=%s to engine as it just completed', action)
+        elif action._action_id not in self._in_progress:
+            # The action has already fully completed (and been removed from
+            # _in_progress) by the time abort() was called - nothing to do.
+            logger.debug('Not sending abort for action=%s as it is no longer in progress', action)
         else:
             # move from in-progress to aborting dicts
             self._aborting[action._action_id] = action
